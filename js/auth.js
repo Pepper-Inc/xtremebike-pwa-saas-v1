@@ -87,15 +87,6 @@ XBM.Auth = (function () {
         if (nameEl) nameEl.textContent = profile.full_name || 'Usuario';
         if (roleEl) roleEl.textContent = profile.role === 'admin' ? 'Administrador' : 'Instructor';
         if (avatarEl) avatarEl.textContent = (profile.full_name || 'U')[0].toUpperCase();
-
-        // Wire the static logout button in HTML (no dynamic injection needed)
-        const logoutBtn = document.getElementById('logoutBtn');
-        if (logoutBtn && !logoutBtn._wired) {
-            logoutBtn._wired = true;
-            logoutBtn.addEventListener('click', () => {
-                if (confirm('¿Cerrar sesión?')) logout();
-            });
-        }
     }
 
     /* ── WATCH AUTH STATE ─────────────────────────────────────── */
@@ -119,3 +110,15 @@ XBM.Auth = (function () {
         get profile() { return currentProfile; },
     };
 })();
+
+// Wire logout button as soon as DOM is ready — independent of auth state
+// so it always works even if hydrateSidebar is called late or skipped
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('logoutBtn');
+    if (btn && !btn._wired) {
+        btn._wired = true;
+        btn.addEventListener('click', () => {
+            if (confirm('¿Cerrar sesión?')) XBM.Auth.logout();
+        });
+    }
+});
