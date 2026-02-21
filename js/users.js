@@ -40,11 +40,15 @@ XBM.Users = (function () {
     async function saveProfile(id, changes) {
         if (!window.db) return false;
         try {
-            const { error } = await db
+            const { data, error } = await db
                 .from('profiles')
                 .update({ ...changes, updated_at: new Date().toISOString() })
-                .eq('id', id);
+                .eq('id', id)
+                .select();
             if (error) throw error;
+            if (!data || data.length === 0) {
+                throw new Error("Permiso denegado por Supabase RLS o el usuario no existe.");
+            }
             return true;
         } catch (err) {
             console.warn('[Users] Save error:', err.message);
