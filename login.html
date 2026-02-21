@@ -12,6 +12,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet" />
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+
   <style>
     /* ── RESET & TOKENS ──────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -105,10 +108,12 @@
       text-align: center;
     }
 
-    .brand-logo {
-      width: 96px; height: 96px;
-      margin: 0 auto 2rem;
-      filter: drop-shadow(0 0 24px rgba(232,255,0,0.6));
+    .brand-logo-img {
+      width: 100%;
+      max-width: 280px;
+      height: auto;
+      margin: 0 auto 1.5rem;
+      filter: drop-shadow(0 0 16px rgba(232,255,0,0.3));
       animation: float 4s ease-in-out infinite;
     }
 
@@ -428,23 +433,9 @@
   <!-- ── LEFT: BRAND PANEL ────────────────────────────────── -->
   <aside class="brand-panel" aria-hidden="true">
     <div class="brand-content">
-      <!-- Wheel SVG icon -->
-      <svg class="brand-logo" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="48" cy="48" r="44" stroke="#E8FF00" stroke-width="3"/>
-        <circle cx="48" cy="48" r="8" fill="#E8FF00"/>
-        <circle cx="48" cy="48" r="18" stroke="#E8FF00" stroke-width="1.5" stroke-dasharray="4 3"/>
-        <!-- Spokes -->
-        <line x1="48" y1="4"  x2="48" y2="30" stroke="#E8FF00" stroke-width="2"/>
-        <line x1="48" y1="66" x2="48" y2="92" stroke="#E8FF00" stroke-width="2"/>
-        <line x1="4"  y1="48" x2="30" y2="48" stroke="#E8FF00" stroke-width="2"/>
-        <line x1="66" y1="48" x2="92" y2="48" stroke="#E8FF00" stroke-width="2"/>
-        <line x1="11.7" y1="11.7" x2="30.1" y2="30.1" stroke="#E8FF00" stroke-width="1.5"/>
-        <line x1="65.9" y1="65.9" x2="84.3" y2="84.3" stroke="#E8FF00" stroke-width="1.5"/>
-        <line x1="84.3" y1="11.7" x2="65.9" y2="30.1" stroke="#E8FF00" stroke-width="1.5"/>
-        <line x1="30.1" y1="65.9" x2="11.7" y2="84.3" stroke="#E8FF00" stroke-width="1.5"/>
-      </svg>
+      <!-- Official Web Logo -->
+      <img src="assets/logo.png" alt="Xtreme Bike Logo" class="brand-logo-img" />
 
-      <h2 class="brand-name">XTREME BIKE</h2>
       <p class="brand-sub">Management Platform</p>
 
       <p class="brand-tagline">
