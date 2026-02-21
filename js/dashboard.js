@@ -13,9 +13,15 @@ XBM.Dashboard = (function () {
     async function loadStatsFromDB() {
         if (!window.db) return null;
         try {
-            const today = new Date().toISOString().slice(0, 10);
-            const todayStart = today + 'T00:00:00';
-            const todayEnd = today + 'T23:59:59';
+            // Build date range using LOCAL timezone (not UTC)
+            // This ensures classes saved at e.g. 07:00 local time are found correctly
+            const now = new Date();
+            const localISO = (h, m, s) => {
+                const d = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, s);
+                return d.toISOString();
+            };
+            const todayStart = localISO(0, 0, 0);
+            const todayEnd = localISO(23, 59, 59);
 
             // Parallel queries
             const [bikesRes, attendRes, classRes] = await Promise.all([

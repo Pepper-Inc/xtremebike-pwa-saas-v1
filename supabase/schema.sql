@@ -133,17 +133,30 @@ alter publication supabase_realtime add table public.attendances;
 
 -- ════════════════════════════════════════════════════════════════
 -- SEED DATA — Run AFTER creating your first admin user
--- Replace 'YOUR-ADMIN-UUID' with the UUID from auth.users
 -- ════════════════════════════════════════════════════════════════
 
--- Update your first user to be admin:
--- UPDATE public.profiles SET role = 'admin' WHERE id = 'YOUR-ADMIN-UUID';
+-- Promote first user to admin (run once after signup):
+-- UPDATE public.profiles SET role = 'admin'
+-- WHERE id = (SELECT id FROM auth.users ORDER BY created_at LIMIT 1);
 
--- Insert today's classes:
+-- ── FIX: Delete any wrong-timezone classes and re-insert correctly
+-- Uses 'America/Caracas' (UTC-4). Adjust if your gym is in a different TZ.
+DELETE FROM public.classes WHERE scheduled_at::date != (now() AT TIME ZONE 'America/Caracas')::date;
+
 insert into public.classes (name, instructor_name, scheduled_at, status, capacity)
 values
-  ('Spinning Intenso',  'Karla', now()::date + interval '7  hours', 'done',     20),
-  ('Endurance Ride',    'Marco', now()::date + interval '9  hours', 'done',     20),
-  ('Beats & Burn',      'Sofía', now()::date + interval '11 hours', 'done',     20),
-  ('Power Hour',        'Diego', now()::date + interval '18 hours', 'active',   20),
-  ('Night Ride',        'Ana',   now()::date + interval '20 hours', 'upcoming', 20);
+  ('Spinning Intenso', 'Karla',
+    (date_trunc('day', now() AT TIME ZONE 'America/Caracas') + interval '7 hours') AT TIME ZONE 'America/Caracas',
+    'done', 20),
+  ('Endurance Ride', 'Marco',
+    (date_trunc('day', now() AT TIME ZONE 'America/Caracas') + interval '9 hours') AT TIME ZONE 'America/Caracas',
+    'done', 20),
+  ('Beats & Burn', 'Sofia',
+    (date_trunc('day', now() AT TIME ZONE 'America/Caracas') + interval '11 hours') AT TIME ZONE 'America/Caracas',
+    'done', 20),
+  ('Power Hour', 'Diego',
+    (date_trunc('day', now() AT TIME ZONE 'America/Caracas') + interval '18 hours') AT TIME ZONE 'America/Caracas',
+    'active', 20),
+  ('Night Ride', 'Ana',
+    (date_trunc('day', now() AT TIME ZONE 'America/Caracas') + interval '20 hours') AT TIME ZONE 'America/Caracas',
+    'upcoming', 20);
