@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Acceso a Xtreme Bike Management — Plataforma de gestión de cycling." />
+  <title>Iniciar Sesión · Xtreme Bike Management</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── RESET & TOKENS ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary-neon:       #E8FF00;
+      --primary-neon-glow:  rgba(232, 255, 0, 0.25);
+      --primary-neon-glow2: rgba(232, 255, 0, 0.08);
+      --border-neon:        rgba(232, 255, 0, 0.4);
+      --bg-main:    #000000;
+      --bg-surface: #121212;
+      --bg-s2:      #1A1A1A;
+      --text-high:  #FFFFFF;
+      --text-low:   #A0A0A0;
+      --text-muted: #606060;
+      --color-danger:     #FF3D57;
+      --color-danger-dim: rgba(255,61,87,0.15);
+      --color-success:    #00E676;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-full: 9999px;
+      --glow-sm: 0 0 8px rgba(232,255,0,0.25), 0 0 16px rgba(232,255,0,0.08);
+      --glow-md: 0 0 16px rgba(232,255,0,0.25), 0 0 32px rgba(232,255,0,0.08);
+      --glow-lg: 0 0 24px rgba(232,255,0,0.5), 0 0 48px rgba(232,255,0,0.2);
+      --font: 'Barlow', sans-serif;
+      --font-c: 'Barlow Condensed', sans-serif;
+      --transition: 200ms cubic-bezier(0.4,0,0.2,1);
+    }
+
+    html { height: 100%; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg-main);
+      color: var(--text-high);
+      min-height: 100dvh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    /* ── LEFT PANEL — BRAND ──────────────────────────────────── */
+    .brand-panel {
+      background: var(--bg-surface);
+      border-right: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-panel::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(232,255,0,0.06) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .brand-panel::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 40px,
+        rgba(255,255,255,0.015) 40px,
+        rgba(255,255,255,0.015) 41px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 40px,
+        rgba(255,255,255,0.015) 40px,
+        rgba(255,255,255,0.015) 41px
+      );
+      pointer-events: none;
+    }
+
+    .brand-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .brand-logo {
+      width: 96px; height: 96px;
+      margin: 0 auto 2rem;
+      filter: drop-shadow(0 0 24px rgba(232,255,0,0.6));
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
+    }
+
+    .brand-name {
+      font-family: var(--font-c);
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--text-high);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .brand-sub {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--primary-neon);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 3rem;
+    }
+
+    .brand-tagline {
+      font-size: 1.1rem;
+      color: var(--text-low);
+      line-height: 1.6;
+      max-width: 320px;
+      margin: 0 auto 3rem;
+    }
+
+    .brand-tagline strong { color: var(--text-high); }
+
+    /* Feature list */
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      text-align: left;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+      color: var(--text-low);
+    }
+
+    .feature-item::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 2px;
+      background: var(--primary-neon);
+      box-shadow: var(--glow-sm);
+      flex-shrink: 0;
+    }
+
+    /* ── RIGHT PANEL — LOGIN FORM ────────────────────────────── */
+    .login-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2.5rem;
+      overflow-y: auto;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .login-header h1 {
+      font-family: var(--font-c);
+      font-size: 2rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--text-high);
+      margin-bottom: 0.25rem;
+    }
+
+    .login-header p {
+      font-size: 0.875rem;
+      color: var(--text-low);
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-low);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.875rem 1rem 0.875rem 2.75rem;
+      background: var(--bg-s2);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-md);
+      color: var(--text-high);
+      font-family: var(--font);
+      font-size: 1rem;
+      transition: all var(--transition);
+      appearance: none;
+    }
+
+    .form-input::placeholder { color: var(--text-muted); }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary-neon);
+      box-shadow: var(--glow-sm);
+      background: #1e1e1e;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 0.875rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px; height: 18px;
+      color: var(--text-muted);
+      pointer-events: none;
+      transition: color var(--transition);
+    }
+
+    .form-input:focus ~ .input-icon,
+    .input-wrap:has(.form-input:focus) .input-icon {
+      color: var(--primary-neon);
+    }
+
+    /* Password toggle */
+    .toggle-pass {
+      position: absolute;
+      right: 0.875rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 20px; height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color var(--transition);
+    }
+
+    .toggle-pass:hover { color: var(--text-high); }
+    .toggle-pass svg { width: 18px; height: 18px; }
+
+    /* Error message */
+    .error-msg {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: var(--color-danger-dim);
+      border: 1px solid rgba(255,61,87,0.25);
+      border-radius: var(--radius-md);
+      color: var(--color-danger);
+      font-size: 0.875rem;
+      margin-bottom: 1.25rem;
+      animation: fadeIn 200ms ease;
+    }
+
+    .error-msg.visible { display: flex; }
+    .error-msg svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; } }
+
+    /* Submit button */
+    .btn-login {
+      width: 100%;
+      padding: 1rem;
+      background: var(--primary-neon);
+      border: none;
+      border-radius: var(--radius-md);
+      color: #000;
+      font-family: var(--font);
+      font-size: 0.9375rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      box-shadow: var(--glow-sm);
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .btn-login:hover:not(:disabled) {
+      box-shadow: var(--glow-md);
+      transform: translateY(-1px);
+    }
+
+    .btn-login:active:not(:disabled) { transform: scale(0.98); }
+
+    .btn-login:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-login .spinner {
+      display: none;
+      width: 18px; height: 18px;
+      border: 2px solid rgba(0,0,0,0.3);
+      border-top-color: #000;
+      border-radius: 50%;
+      animation: spin 700ms linear infinite;
+    }
+
+    .btn-login.loading .spinner { display: block; }
+    .btn-login.loading .btn-text { display: none; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    /* Footer */
+    .login-footer {
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .login-footer strong {
+      display: block;
+      color: var(--primary-neon);
+      font-size: 0.875rem;
+      margin-bottom: 0.25rem;
+    }
+
+    /* Version badge */
+    .version-tag {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      font-size: 0.625rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+
+    /* ── RESPONSIVE ──────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      body {
+        grid-template-columns: 1fr;
+        overflow: auto;
+      }
+      .brand-panel {
+        display: none;
+      }
+      .login-panel {
+        padding: 2rem 1.5rem;
+        min-height: 100dvh;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .login-panel { padding: 1.5rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── LEFT: BRAND PANEL ────────────────────────────────── -->
+  <aside class="brand-panel" aria-hidden="true">
+    <div class="brand-content">
+      <!-- Wheel SVG icon -->
+      <svg class="brand-logo" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="48" cy="48" r="44" stroke="#E8FF00" stroke-width="3"/>
+        <circle cx="48" cy="48" r="8" fill="#E8FF00"/>
+        <circle cx="48" cy="48" r="18" stroke="#E8FF00" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <!-- Spokes -->
+        <line x1="48" y1="4"  x2="48" y2="30" stroke="#E8FF00" stroke-width="2"/>
+        <line x1="48" y1="66" x2="48" y2="92" stroke="#E8FF00" stroke-width="2"/>
+        <line x1="4"  y1="48" x2="30" y2="48" stroke="#E8FF00" stroke-width="2"/>
+        <line x1="66" y1="48" x2="92" y2="48" stroke="#E8FF00" stroke-width="2"/>
+        <line x1="11.7" y1="11.7" x2="30.1" y2="30.1" stroke="#E8FF00" stroke-width="1.5"/>
+        <line x1="65.9" y1="65.9" x2="84.3" y2="84.3" stroke="#E8FF00" stroke-width="1.5"/>
+        <line x1="84.3" y1="11.7" x2="65.9" y2="30.1" stroke="#E8FF00" stroke-width="1.5"/>
+        <line x1="30.1" y1="65.9" x2="11.7" y2="84.3" stroke="#E8FF00" stroke-width="1.5"/>
+      </svg>
+
+      <h2 class="brand-name">XTREME BIKE</h2>
+      <p class="brand-sub">Management Platform</p>
+
+      <p class="brand-tagline">
+        Tu plataforma para <strong>gestionar salas de cycling</strong>,
+        reservas y asistencia — en tiempo real.
+      </p>
+
+      <ul class="feature-list">
+        <li class="feature-item">Mapa interactivo de sala con 20 bikes</li>
+        <li class="feature-item">Check-in y control de créditos en vivo</li>
+        <li class="feature-item">Dashboard de métricas y horarios</li>
+        <li class="feature-item">Funciona offline (PWA)</li>
+        <li class="feature-item">Sincronización en tiempo real</li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- ── RIGHT: LOGIN FORM ────────────────────────────────── -->
+  <main class="login-panel" role="main">
+    <div class="login-card">
+
+      <header class="login-header">
+        <h1>Iniciar Sesión</h1>
+        <p>Accede a tu cuenta de Xtreme Bike Management</p>
+      </header>
+
+      <form id="loginForm" novalidate aria-label="Formulario de inicio de sesión">
+
+        <!-- Error message -->
+        <div class="error-msg" id="errorMsg" role="alert" aria-live="assertive">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span id="errorText">Error al iniciar sesión.</span>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label" for="email">Correo electrónico</label>
+          <div class="input-wrap">
+            <input
+              class="form-input"
+              type="email"
+              id="email"
+              name="email"
+              placeholder="instructor@xtremebike.com"
+              autocomplete="email"
+              inputmode="email"
+              required
+              aria-required="true"
+            />
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label class="form-label" for="password">Contraseña</label>
+          <div class="input-wrap">
+            <input
+              class="form-input"
+              type="password"
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              required
+              aria-required="true"
+            />
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <button type="button" class="toggle-pass" id="togglePass" aria-label="Mostrar/ocultar contraseña">
+              <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-login" id="loginBtn" aria-label="Iniciar sesión">
+          <span class="btn-text">INGRESAR AL SISTEMA</span>
+          <span class="spinner" role="status" aria-label="Cargando..."></span>
+        </button>
+
+        <div class="divider">acceso seguro con Supabase Auth</div>
+      </form>
+
+      <footer class="login-footer">
+        <strong>¿No tienes acceso?</strong>
+        Contacta al administrador de tu estudio para obtener tus credenciales.
+      </footer>
+    </div>
+  </main>
+
+  <p class="version-tag">XBM v1.0 · MVP</p>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    (async function () {
+      // Redirect if already authenticated
+      await XBM.Auth.redirectIfAuthenticated();
+
+      const form      = document.getElementById('loginForm');
+      const loginBtn  = document.getElementById('loginBtn');
+      const errorMsg  = document.getElementById('errorMsg');
+      const errorText = document.getElementById('errorText');
+      const togglePass = document.getElementById('togglePass');
+      const passInput  = document.getElementById('password');
+
+      // Password visibility toggle
+      togglePass.addEventListener('click', () => {
+        const isPass = passInput.type === 'password';
+        passInput.type = isPass ? 'text' : 'password';
+        togglePass.setAttribute('aria-label', isPass ? 'Ocultar contraseña' : 'Mostrar contraseña');
+        document.getElementById('eyeIcon').innerHTML = isPass
+          ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`
+          : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+      });
+
+      // Form submit
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email    = document.getElementById('email').value.trim();
+        const password = passInput.value;
+
+        if (!email || !password) {
+          showError('Por favor completa todos los campos.');
+          return;
+        }
+
+        setLoading(true);
+        errorMsg.classList.remove('visible');
+
+        try {
+          await XBM.Auth.login(email, password);
+          // Successful → Supabase persists session automatically
+          window.location.href = 'index.html';
+        } catch (err) {
+          const msgs = {
+            'Invalid login credentials':    'Correo o contraseña incorrectos.',
+            'Email not confirmed':          'Confirma tu correo antes de ingresar.',
+            'Too many requests':            'Demasiados intentos. Espera un momento.',
+          };
+          showError(msgs[err.message] || err.message || 'Error al iniciar sesión.');
+        } finally {
+          setLoading(false);
+        }
+      });
+
+      function setLoading(isLoading) {
+        loginBtn.disabled = isLoading;
+        loginBtn.classList.toggle('loading', isLoading);
+      }
+
+      function showError(msg) {
+        errorText.textContent = msg;
+        errorMsg.classList.add('visible');
+        errorMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    })();
+  </script>
+</body>
+</html>
