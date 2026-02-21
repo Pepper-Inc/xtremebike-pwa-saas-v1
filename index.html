@@ -25,6 +25,7 @@
   <link rel="stylesheet" href="css/room-map.css" />
   <link rel="stylesheet" href="css/checkin.css" />
   <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/analytics.css" />
 </head>
 <body>
 
@@ -215,6 +216,49 @@
         </div>
         <div class="activity-feed" id="activityFeed" role="log" aria-live="polite" aria-label="Actividad reciente"></div>
       </div>
+
+      <!-- ── ANALYTICS ROW ─────────────────────────────────── -->
+      <div class="analytics-grid">
+
+        <!-- Chart 1: Estado de sala (Donut) -->
+        <div class="dash-card analytics-card">
+          <div class="dash-card__header">
+            <h2 class="dash-card__title">Estado de Sala</h2>
+            <span class="chart-badge chart-badge--live" id="donutLiveBadge">EN VIVO</span>
+          </div>
+          <div class="chart-wrap chart-wrap--donut">
+            <canvas id="chartDonut" aria-label="Gráfica de estado de sala" role="img"></canvas>
+            <div class="donut-center" id="donutCenter" aria-hidden="true">
+              <span class="donut-center__value" id="donutPct">0%</span>
+              <span class="donut-center__label">Ocupado</span>
+            </div>
+          </div>
+          <div class="chart-legend" id="donutLegend" aria-label="Leyenda de gráfica"></div>
+        </div>
+
+        <!-- Chart 2: Capacidad vs Asistencia por clase (Bar) -->
+        <div class="dash-card analytics-card">
+          <div class="dash-card__header">
+            <h2 class="dash-card__title">Clases: Capacidad vs Asistencia</h2>
+            <span class="chart-badge">HOY</span>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="chartBar" aria-label="Gráfica de asistencia por clase" role="img"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 3: Ingresos 7 días (Line) -->
+        <div class="dash-card analytics-card analytics-card--wide">
+          <div class="dash-card__header">
+            <h2 class="dash-card__title">Ingresos — Últimos 7 Días</h2>
+            <span class="chart-badge">MXN</span>
+          </div>
+          <div class="chart-wrap chart-wrap--line">
+            <canvas id="chartLine" aria-label="Gráfica de ingresos de la semana" role="img"></canvas>
+          </div>
+        </div>
+
+      </div>
     </section>
 
     <!-- ── MODULE: ROOM MAP ──────────────────────────────── -->
@@ -350,6 +394,9 @@
   <!-- Toast notifications -->
   <div class="toast-container" id="toastContainer" role="region" aria-live="assertive" aria-label="Notificaciones"></div>
 
+  <!-- Chart.js via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
   <!-- Supabase SDK (must load synchronously before app scripts) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/supabase-client.js"></script>
@@ -362,6 +409,7 @@
   <script src="js/checkin.js" defer></script>
   <script src="js/dashboard.js" defer></script>
   <script src="js/app.js" defer></script>
+  <script src="js/analytics.js" defer></script>
 
   <!-- Auth guard + PWA Service Worker -->
   <script>

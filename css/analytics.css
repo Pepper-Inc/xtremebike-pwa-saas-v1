@@ -1,0 +1,189 @@
+/**
+ * XTREME BIKE MANAGEMENT — ANALYTICS.CSS
+ * Styles for Chart.js analytics section on the Dashboard
+ */
+
+/* ── ANALYTICS GRID ──────────────────────────────────────────── */
+.analytics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+/* The wide card spans both columns */
+.analytics-card--wide {
+    grid-column: 1 / -1;
+}
+
+/* ── ANALYTICS CARD ──────────────────────────────────────────── */
+.analytics-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-height: 280px;
+}
+
+/* ── CHART BADGE ─────────────────────────────────────────────── */
+.chart-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: var(--radius-full, 9999px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-low);
+    background: rgba(255, 255, 255, 0.04);
+    white-space: nowrap;
+}
+
+.chart-badge--live {
+    border-color: rgba(232, 255, 0, 0.2);
+    color: var(--primary-neon, #E8FF00);
+    background: rgba(232, 255, 0, 0.05);
+}
+
+.chart-badge--live::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--primary-neon, #E8FF00);
+    box-shadow: 0 0 6px var(--primary-neon, #E8FF00);
+    animation: pulse 2s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(0.8);
+    }
+}
+
+/* ── CHART WRAPPER ───────────────────────────────────────────── */
+.chart-wrap {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    min-height: 180px;
+    max-height: 220px;
+}
+
+.chart-wrap--donut {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: 200px;
+    position: relative;
+}
+
+.chart-wrap--line {
+    max-height: 200px;
+}
+
+/* ── DONUT CENTER OVERLAY ─────────────────────────────────────── */
+.donut-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+    line-height: 1;
+}
+
+.donut-center__value {
+    display: block;
+    font-family: var(--font-condensed, 'Barlow Condensed', sans-serif);
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: var(--primary-neon, #E8FF00);
+    text-shadow: 0 0 16px rgba(232, 255, 0, 0.5);
+    letter-spacing: -0.02em;
+}
+
+.donut-center__label {
+    display: block;
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-low, #A0A0A0);
+    margin-top: 0.25rem;
+}
+
+/* ── DONUT LEGEND ─────────────────────────────────────────────── */
+.chart-legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+    margin-top: 0.25rem;
+}
+
+.chart-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.75rem;
+    color: var(--text-low, #A0A0A0);
+}
+
+.chart-legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+/* ── CHART.JS CANVAS ─────────────────────────────────────────── */
+canvas {
+    display: block;
+    max-width: 100%;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .analytics-card--wide {
+        grid-column: 1 / 1;
+    }
+
+    .analytics-card {
+        min-height: 240px;
+    }
+
+    .chart-wrap--donut {
+        max-height: 180px;
+    }
+
+    .chart-wrap--line {
+        max-height: 180px;
+    }
+}
+
+@media (max-width: 600px) {
+    .analytics-grid {
+        gap: 1rem;
+    }
+
+    .analytics-card {
+        min-height: 200px;
+    }
+}
