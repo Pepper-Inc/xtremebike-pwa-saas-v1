@@ -88,24 +88,13 @@ XBM.Auth = (function () {
         if (roleEl) roleEl.textContent = profile.role === 'admin' ? 'Administrador' : 'Instructor';
         if (avatarEl) avatarEl.textContent = (profile.full_name || 'U')[0].toUpperCase();
 
-        // Logout button (inject if sidebar footer exists)
-        const footer = document.querySelector('.sidenav__footer');
-        if (footer && !document.getElementById('logoutBtn')) {
-            const logoutBtn = document.createElement('button');
-            logoutBtn.id = 'logoutBtn';
-            logoutBtn.className = 'logout-btn';
-            logoutBtn.innerHTML = `
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-          <polyline points="16 17 21 12 16 7"/>
-          <line x1="21" y1="12" x2="9" y2="12"/>
-        </svg>
-        Cerrar Sesión`;
-            logoutBtn.setAttribute('aria-label', 'Cerrar sesión');
+        // Wire the static logout button in HTML (no dynamic injection needed)
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn && !logoutBtn._wired) {
+            logoutBtn._wired = true;
             logoutBtn.addEventListener('click', () => {
                 if (confirm('¿Cerrar sesión?')) logout();
             });
-            footer.appendChild(logoutBtn);
         }
     }
 
