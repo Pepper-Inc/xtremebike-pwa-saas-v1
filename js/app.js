@@ -6,7 +6,7 @@
 (function () {
     'use strict';
 
-    const MODULES = ['dashboard', 'roommap', 'checkin'];
+    const MODULES = ['dashboard', 'roommap', 'checkin', 'users'];
     let currentModule = 'dashboard';
     let modulesInited = {};
 
@@ -42,6 +42,7 @@
             if (moduleName === 'dashboard' && XBM.Dashboard) XBM.Dashboard.init();
             if (moduleName === 'roommap' && XBM.RoomMap) XBM.RoomMap.init();
             if (moduleName === 'checkin' && XBM.CheckIn) XBM.CheckIn.init();
+            if (moduleName === 'users' && XBM.Users) XBM.Users.init();
         }
 
         currentModule = moduleName;

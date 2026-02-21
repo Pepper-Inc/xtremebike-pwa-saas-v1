@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="css/dashboard.css" />
   <link rel="stylesheet" href="css/analytics.css" />
   <link rel="stylesheet" href="css/qr.css" />
+  <link rel="stylesheet" href="css/users.css" />
 </head>
 <body>
 
@@ -94,6 +95,19 @@
             </svg>
           </span>
           <span class="sidenav__label">Check-in</span>
+        </button>
+      </li>
+      <li class="sidenav__item" role="listitem" id="nav-users-item">
+        <button class="sidenav__link" id="nav-users" data-module="users" aria-label="Gestión de Usuarios">
+          <span class="sidenav__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <line x1="19" y1="8" x2="19" y2="14"/>
+              <line x1="22" y1="11" x2="16" y2="11"/>
+            </svg>
+          </span>
+          <span class="sidenav__label">Usuarios</span>
         </button>
       </li>
     </ul>
@@ -356,6 +370,55 @@
       </div>
     </section>
 
+    <!-- ── MODULE: USERS ────────────────────────────────────── -->
+    <section class="module hidden" id="module-users" data-module="users" aria-labelledby="users-title">
+      <div class="page-header">
+        <div>
+          <p class="page-overline">Módulo D</p>
+          <h1 class="page-title" id="users-title">Gestión de Usuarios</h1>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn--primary" id="openInviteBtn" aria-label="Invitar nuevo instructor">
+            <svg style="width:15px;height:15px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <line x1="19" y1="8" x2="19" y2="14"/>
+              <line x1="22" y1="11" x2="16" y2="11"/>
+            </svg>
+            + Invitar Instructor
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats strip -->
+      <div class="users-stats" role="status" aria-label="Estadísticas de usuarios">
+        <div class="users-stat-card">
+          <span class="users-stat-card__label">Total</span>
+          <span class="users-stat-card__value" id="usersTotal">—</span>
+        </div>
+        <div class="users-stat-card">
+          <span class="users-stat-card__label">Activos</span>
+          <span class="users-stat-card__value" id="usersActive">—</span>
+        </div>
+        <div class="users-stat-card">
+          <span class="users-stat-card__label">Admins</span>
+          <span class="users-stat-card__value" id="usersAdmins">—</span>
+        </div>
+        <div class="users-stat-card">
+          <span class="users-stat-card__label">Instructores</span>
+          <span class="users-stat-card__value" id="usersInstructors">—</span>
+        </div>
+      </div>
+
+      <!-- Users grid -->
+      <div class="users-toolbar">
+        <span class="users-toolbar__title">Directorio de Personal</span>
+      </div>
+      <div class="users-grid" id="usersGrid" role="list" aria-label="Lista de usuarios">
+        <!-- populated by JS -->
+      </div>
+    </section>
+
   </main>
 
   <!-- ═══════════════════════════════════════════════════════
@@ -437,7 +500,99 @@
     </div>
   </div>
 
-  <!-- Toast notifications -->
+  <!-- EDIT USER MODAL -->
+  <div class="modal-overlay" id="editUserOverlay" role="dialog" aria-modal="true" aria-labelledby="editModalTitle" aria-hidden="true">
+    <div class="modal users-modal">
+      <button class="modal__close" id="editUserClose" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="modal__header">
+        <div class="modal__bike-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div>
+          <p class="modal__overline">PERFIL</p>
+          <h2 class="modal__title" id="editModalTitle">Editar Usuario</h2>
+        </div>
+      </div>
+      <div class="modal__body">
+        <div class="form-group">
+          <label class="form-label" for="editUserName">Nombre completo</label>
+          <input class="form-input" type="text" id="editUserName" placeholder="Ej. María García" autocomplete="name" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="editUserRole">Rol</label>
+            <select class="form-select-dark" id="editUserRole">
+              <option value="instructor">Instructor</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editUserCredits">Créditos</label>
+            <input class="form-input" type="number" id="editUserCredits" min="0" max="999" placeholder="0" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="editUserPhone">Teléfono (opcional)</label>
+          <input class="form-input" type="tel" id="editUserPhone" placeholder="+52 55 1234 5678" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="editUserNotes">Notas internas (opcional)</label>
+          <input class="form-input" type="text" id="editUserNotes" placeholder="Ej. Especialidad: HIIT" />
+        </div>
+        <div class="modal__actions">
+          <button class="btn btn--primary btn--lg" id="saveEditUserBtn">Guardar Cambios</button>
+          <button class="btn btn--ghost btn--lg" onclick="document.getElementById('editUserOverlay').classList.remove('is-open')">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INVITE USER MODAL -->
+  <div class="modal-overlay" id="inviteUserOverlay" role="dialog" aria-modal="true" aria-labelledby="inviteModalTitle" aria-hidden="true">
+    <div class="modal users-modal">
+      <button class="modal__close" id="inviteUserClose" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="modal__header">
+        <div class="modal__bike-badge" style="background:rgba(0,230,118,0.08);border-color:rgba(0,230,118,0.2);" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00E676" stroke-width="2" style="width:18px;height:18px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div>
+          <p class="modal__overline">NUEVO ACCESO</p>
+          <h2 class="modal__title" id="inviteModalTitle">Invitar Instructor</h2>
+        </div>
+      </div>
+      <div class="modal__body">
+        <div class="form-group">
+          <label class="form-label" for="inviteEmail">Correo electrónico</label>
+          <input class="form-input" type="email" id="inviteEmail" placeholder="instructor@estudio.com" autocomplete="email" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="inviteName">Nombre completo</label>
+            <input class="form-input" type="text" id="inviteName" placeholder="Nombre Apellido" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="inviteRole">Rol</label>
+            <select class="form-select-dark" id="inviteRole">
+              <option value="instructor">Instructor</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+        </div>
+        <p style="font-size:0.8125rem;color:var(--text-muted);line-height:1.5;">
+          Se enviará un enlace mágico al correo del instructor. Al hacer clic, podrá acceder directamente sin contraseña.
+        </p>
+        <span class="invite-status" id="inviteStatus"></span>
+        <div class="modal__actions">
+          <button class="btn btn--primary btn--lg" id="sendInviteBtn">Enviar Invitación</button>
+          <button class="btn btn--ghost btn--lg" onclick="document.getElementById('inviteUserOverlay').classList.remove('is-open')">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="toast-container" id="toastContainer" role="region" aria-live="assertive" aria-label="Notificaciones"></div>
 
   <!-- QR Code libs -->
@@ -461,6 +616,7 @@
   <script src="js/app.js" defer></script>
   <script src="js/analytics.js" defer></script>
   <script src="js/qr.js" defer></script>
+  <script src="js/users.js" defer></script>
 
   <!-- Auth guard + PWA Service Worker -->
   <script>
