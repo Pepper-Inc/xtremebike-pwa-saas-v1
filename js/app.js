@@ -43,6 +43,7 @@
             if (moduleName === 'roommap' && XBM.RoomMap) XBM.RoomMap.init();
             if (moduleName === 'checkin' && XBM.CheckIn) XBM.CheckIn.init();
             if (moduleName === 'staff' && XBM.Users) XBM.Users.init();
+            if (moduleName === 'clients' && XBM.Clients) XBM.Clients.init();
         }
 
         currentModule = moduleName;
