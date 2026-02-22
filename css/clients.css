@@ -1,0 +1,183 @@
+/**
+ * XTREME BIKE MANAGEMENT — CLIENTS.CSS
+ * Styling for the Clients Management Module
+ */
+
+.clients-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: var(--radius-md);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.clients-toolbar__title {
+  font-family: var(--font-c);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-high);
+  text-transform: uppercase;
+}
+
+.clients-filter {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.clients-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+.client-card {
+  background: var(--bg-surface);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.client-card:hover {
+  border-color: rgba(255,255,255,0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.client-card--inactive {
+  opacity: 0.6;
+}
+
+.client-card--inactive .ccard__avatar {
+  background: #333;
+  color: #888;
+  border-color: transparent;
+}
+
+.ccard__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.ccard__avatar {
+  width: 44px; height: 44px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-c);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-high);
+  flex-shrink: 0;
+}
+
+.ccard__meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.ccard__name {
+  font-family: var(--font-c);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-high);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.125rem;
+}
+
+.ccard__email {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ccard__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  background: var(--bg-s2);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+.ccard__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ccard__stat-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ccard__stat-value {
+  font-family: var(--font-c);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-high);
+}
+
+.ccard__stat-value--highlight {
+  color: var(--primary-neon);
+}
+
+.ccard__stat-value--danger {
+  color: var(--color-danger);
+}
+
+.ccard__actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.ccard__actions .btn {
+  flex: 1;
+}
+
+.clients-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--bg-surface);
+  border: 1px dashed rgba(255,255,255,0.1);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+}
+
+.clients-empty svg {
+  width: 48px; height: 48px;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .clients-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
