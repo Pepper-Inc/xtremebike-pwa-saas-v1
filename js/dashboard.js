@@ -24,7 +24,7 @@ XBM.Dashboard = (function () {
             const todayEnd = localISO(23, 59, 59);
 
             // Parallel queries
-            const [bikesRes, attendRes, classRes] = await Promise.all([
+            const [bikesRes, attendRes, classRes, profilesRes] = await Promise.all([
                 db.from('bikes').select('status'),
                 db.from('attendances')
                     .select('status, credits_remaining')
@@ -35,11 +35,16 @@ XBM.Dashboard = (function () {
                     .gte('scheduled_at', todayStart)
                     .lte('scheduled_at', todayEnd)
                     .order('scheduled_at'),
+                db.from('profiles')
+                    .select('id, is_active')
+                    .in('role', ['admin', 'instructor'])
+                    .eq('is_active', true),
             ]);
 
             const bikes = bikesRes.data || [];
             const attendances = attendRes.data || [];
             const classes = classRes.data || [];
+            const staff = profilesRes.data || [];
 
             // Compute stats
             const occupied = bikes.filter(b => b.status === 'occupied').length;
@@ -48,8 +53,9 @@ XBM.Dashboard = (function () {
             const attended = attendances.filter(a => a.status === 'attended').length;
             const income = attended * 120; // 120 MXN per attended session
             const active = attendances.filter(a => a.status !== 'noshow').length;
+            const staffCount = staff.length;
 
-            return { occupied, blocked, pct, attended, income, active, classes };
+            return { occupied, blocked, pct, attended, income, active, classes, staffCount };
         } catch (err) {
             console.warn('[Dashboard] Stats load error (using local data):', err.message);
             return null;
@@ -75,6 +81,10 @@ XBM.Dashboard = (function () {
             // Usuarios activos from DB
             const kpiUEl = document.getElementById('kpi-usuarios');
             if (kpiUEl) XBM.animateNumber(kpiUEl, dbStats.active);
+
+            // Staff Count from DB
+            const kpiSEl = document.getElementById('kpi-staff');
+            if (kpiSEl) XBM.animateNumber(kpiSEl, dbStats.staffCount);
 
             // Update schedule if we got real classes
             if (dbStats.classes && dbStats.classes.length > 0) {
