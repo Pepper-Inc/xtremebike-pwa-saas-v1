@@ -59,11 +59,12 @@ XBM.RoomMap = (function () {
     }
 
     /* ── SUPABASE: SAVE RESERVATION ───────────────────────────── */
-    async function saveReservationToDB({ bikeId, userName, creditsLeft }) {
+    async function saveReservationToDB({ bikeId, userName, creditsLeft, classId }) {
         if (!window.db) return;
         try {
             await db.from('reservations').insert({
                 bike_id: bikeId,
+                class_id: classId || null,
                 user_name: userName,
                 credits_used: 1,
                 credits_remaining: creditsLeft,
@@ -167,6 +168,40 @@ XBM.RoomMap = (function () {
             allClients = data || [];
         } catch (err) {
             console.warn('[RoomMap] fetchClients error:', err.message);
+        }
+    }
+
+    async function loadClassesForBooking() {
+        if (!window.db) return;
+        try {
+            const today = new Date().toISOString().slice(0, 10);
+            const { data, error } = await db
+                .from('classes')
+                .select('*')
+                .gte('scheduled_at', today + 'T00:00:00')
+                .lte('scheduled_at', today + 'T23:59:59')
+                .order('scheduled_at');
+
+            if (error) throw error;
+            const sel = document.getElementById('bookingClass');
+            if (!sel) return;
+
+            sel.innerHTML = '';
+            if (!data || data.length === 0) {
+                sel.innerHTML = '<option value="">Sin clases hoy</option>';
+                return;
+            }
+
+            data.forEach(cls => {
+                const time = new Date(cls.scheduled_at).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+                const opt = document.createElement('option');
+                opt.value = cls.id;
+                opt.textContent = `${time} — ${cls.name}`;
+                if (cls.status === 'active') opt.selected = true;
+                sel.appendChild(opt);
+            });
+        } catch (err) {
+            console.warn('[RoomMap] loadClassesForBooking error:', err.message);
         }
     }
 
@@ -372,7 +407,7 @@ XBM.RoomMap = (function () {
 
         // Persist to Supabase (non-blocking)
         saveBikeToDB(bike);
-        saveReservationToDB({ bikeId: storedId, userName: name, creditsLeft });
+        saveReservationToDB({ bikeId: storedId, userName: name, creditsLeft, classId: cls });
 
         XBM.toast({ title: `Bike #${storedId} Reservada`, msg: `${name} · ${creditsLeft} créd. restantes`, type: 'success' });
         XBM.addActivity({ type: 'neon', text: `<strong>Bike #${storedId}</strong> reservada por ${name}` });
@@ -539,6 +574,7 @@ XBM.RoomMap = (function () {
         // Load real state from Supabase, fall back to local seed data
         await loadBikesFromDB();
         await fetchClients(); // Pre-load clients for search
+        await loadClassesForBooking(); // Populate class select
         buildGrid();
 
         // Subscribe to live updates from other devices

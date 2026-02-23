@@ -56,14 +56,44 @@ XBM.CheckIn = (function () {
     async function loadAttendeesFromDB(classId) {
         if (!window.db || !classId || classId.length < 10) return null; // local key
         try {
-            const { data, error } = await db
-                .from('attendances')
-                .select('*')
-                .eq('class_id', classId)
-                .order('bike_number');
+            // Fetch both real-time attendances and reservations for this class
+            const [attRes, resRes] = await Promise.all([
+                db.from('attendances').select('*').eq('class_id', classId),
+                db.from('reservations').select('*').eq('class_id', classId)
+            ]);
 
-            if (error) throw error;
-            return data && data.length > 0 ? data : null;
+            const attendances = attRes.data || [];
+            const reservations = resRes.data || [];
+
+            // If we have nothing in the database, return null to allow fallback
+            if (attendances.length === 0 && reservations.length === 0) return null;
+
+            // Merge: Start with reservations as the base (since people book first)
+            // Then overlay attendance status if it exists.
+            const mergedMap = new Map();
+
+            reservations.forEach(r => {
+                mergedMap.set(r.user_name, {
+                    id: r.id,
+                    user_name: r.user_name,
+                    bike_number: r.bike_id,
+                    credits_remaining: r.credits_remaining,
+                    status: 'pending' // Default if no attendance found
+                });
+            });
+
+            // If something is in attendances, it overrides/augments the record
+            attendances.forEach(a => {
+                const existing = mergedMap.get(a.user_name);
+                if (existing) {
+                    existing.status = a.status;
+                    existing.id = a.id; // Use attendance ID for updates
+                } else {
+                    mergedMap.set(a.user_name, a);
+                }
+            });
+
+            return Array.from(mergedMap.values()).sort((a, b) => a.bike_number - b.bike_number);
         } catch (err) {
             console.warn('[CheckIn] Attendees load error:', err.message);
             return null;
@@ -107,13 +137,13 @@ XBM.CheckIn = (function () {
     /* ── SUPABASE: REALTIME (attendances) ────────────────────────── */
     function subscribeToAttendances() {
         if (!window.db) return;
-        db.channel('attendances-realtime')
+        db.channel('checkin-realtime')
             .on('postgres_changes',
                 { event: '*', schema: 'public', table: 'attendances' },
-                () => {
-                    // Re-render the active class list
-                    loadClass(activeClassKey);
-                })
+                () => { loadClass(activeClassKey); })
+            .on('postgres_changes',
+                { event: '*', schema: 'public', table: 'reservations' },
+                () => { loadClass(activeClassKey); })
             .subscribe();
     }
 
