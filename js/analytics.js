@@ -93,7 +93,7 @@ CYKL.Analytics = (function () {
             options: {
                 cutout: '68%',
                 responsive: true,
-                maintainAspectRatio: true,
+                maintainAspectRatio: false,
                 animation: { duration: 800, easing: 'easeOutQuart' },
                 plugins: {
                     legend: { display: false },
@@ -226,7 +226,7 @@ CYKL.Analytics = (function () {
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true,
+                maintainAspectRatio: false,
                 animation: { duration: 900, easing: 'easeOutQuart' },
                 plugins: {
                     legend: {
@@ -355,7 +355,7 @@ CYKL.Analytics = (function () {
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true,
+                maintainAspectRatio: false,
                 animation: { duration: 1100, easing: 'easeOutQuart' },
                 plugins: {
                     legend: { display: false },

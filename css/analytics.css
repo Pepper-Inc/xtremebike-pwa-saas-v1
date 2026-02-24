@@ -153,6 +153,7 @@
 canvas {
     display: block;
     max-width: 100%;
+    height: 100% !important;
 }
 
 /* ── RESPONSIVE ──────────────────────────────────────────────── */
@@ -166,24 +167,30 @@ canvas {
     }
 
     .analytics-card {
-        min-height: 240px;
+        min-height: 320px;
     }
 
     .chart-wrap--donut {
-        max-height: 180px;
+        max-height: 220px;
+        min-height: 200px;
     }
 
     .chart-wrap--line {
-        max-height: 180px;
+        max-height: 200px;
     }
 }
 
 @media (max-width: 600px) {
     .analytics-grid {
-        gap: 1rem;
+        gap: 1.5rem;
     }
 
     .analytics-card {
-        min-height: 200px;
+        padding: var(--space-4);
+        min-height: 340px;
+    }
+
+    .chart-wrap--donut {
+        max-height: 240px;
     }
 }
