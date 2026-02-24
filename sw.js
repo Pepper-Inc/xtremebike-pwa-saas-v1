@@ -3,7 +3,7 @@
  * Offline-first PWA caching strategy
  */
 
-const CACHE_VERSION = 'cykl-v1.0.1';
+const CACHE_VERSION = 'cykl-v1.0.2';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const DYNAMIC_CACHE = `${CACHE_VERSION}-dynamic`;
 
@@ -23,6 +23,10 @@ const STATIC_ASSETS = [
     '/js/dashboard.js',
     '/js/app.js',
     '/manifest.json',
+    '/assets/favicon.png',
+    '/assets/logo.png',
+    '/icons/icon-192.png',
+    '/icons/icon-512.png',
     'https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Barlow+Condensed:wght@700;900&display=swap',
 ];
 
