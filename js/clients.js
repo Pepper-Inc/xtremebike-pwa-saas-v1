@@ -180,6 +180,16 @@ CYKL.Clients = (function () {
        INVITE MODAL (NEW CLIENT)
     ══════════════════════════════════════════════════════════ */
     function openInviteModal() {
+        // Ensure listeners are attached if init hasn't run yet
+        if (!CYKL.Clients._listenersAttached) {
+            document.getElementById('sendInviteClientBtn')?.addEventListener('click', submitInvite);
+            document.getElementById('inviteClientClose')?.addEventListener('click', closeInviteModal);
+            document.getElementById('inviteClientOverlay')?.addEventListener('click', e => {
+                if (e.target === e.currentTarget) closeInviteModal();
+            });
+            CYKL.Clients._listenersAttached = true;
+        }
+
         document.getElementById('inviteClientEmail').value = '';
         document.getElementById('inviteClientName').value = '';
         document.getElementById('inviteClientPhone').value = '';
@@ -190,7 +200,7 @@ CYKL.Clients = (function () {
         const overlay = document.getElementById('inviteClientOverlay');
         overlay.classList.add('is-open');
         overlay.setAttribute('aria-hidden', 'false');
-        document.getElementById('inviteClientEmail').focus();
+        setTimeout(() => document.getElementById('inviteClientEmail')?.focus(), 100);
     }
 
     function closeInviteModal() {
@@ -199,10 +209,11 @@ CYKL.Clients = (function () {
     }
 
     async function submitInvite() {
-        const email = document.getElementById('inviteClientEmail').value.trim();
-        const fullName = document.getElementById('inviteClientName').value.trim();
-        const phone = document.getElementById('inviteClientPhone').value.trim() || null;
-        const credits = parseInt(document.getElementById('inviteClientCredits').value, 10) || 0;
+        console.log('[Clients] submitInvite triggered');
+        const email = document.getElementById('inviteClientEmail')?.value.trim();
+        const fullName = document.getElementById('inviteClientName')?.value.trim();
+        const phone = document.getElementById('inviteClientPhone')?.value.trim() || null;
+        const credits = parseInt(document.getElementById('inviteClientCredits')?.value || '0', 10) || 0;
         const status = document.getElementById('inviteClientStatus');
 
         if (!email || !fullName) {
@@ -227,15 +238,16 @@ CYKL.Clients = (function () {
             });
             if (error) throw error;
 
+            console.log('[Clients] Invite success for:', email);
             status.className = 'invite-status invite-status--ok';
             status.textContent = `✓ Cliente registrado. Enlace enviado a ${email}`;
             CYKL.toast({ title: 'Cliente Creado', msg: fullName, type: 'success' });
 
-            setTimeout(() => { closeInviteModal(); }, 3000);
+            setTimeout(() => { closeInviteModal(); }, 2500);
 
         } catch (err) {
-            console.warn('[Clients] Invite error:', err.message);
-            status.textContent = err.message;
+            console.error('[Clients] Invite error:', err);
+            status.textContent = `Error: ${err.message}`;
             status.style.color = 'var(--color-danger)';
         } finally {
             btn.disabled = false;
@@ -262,14 +274,17 @@ CYKL.Clients = (function () {
             render();
         });
 
-        // Modals
-        document.getElementById('openClientModalBtn')?.addEventListener('click', openInviteModal);
-        document.getElementById('inviteClientClose')?.addEventListener('click', closeInviteModal);
-        document.getElementById('sendInviteClientBtn')?.addEventListener('click', submitInvite);
+        // Modals - ensure listeners are bound
+        if (!CYKL.Clients._listenersAttached) {
+            document.getElementById('sendInviteClientBtn')?.addEventListener('click', submitInvite);
+            document.getElementById('inviteClientClose')?.addEventListener('click', closeInviteModal);
+            document.getElementById('inviteClientOverlay')?.addEventListener('click', e => {
+                if (e.target === e.currentTarget) closeInviteModal();
+            });
+            CYKL.Clients._listenersAttached = true;
+        }
 
-        document.getElementById('inviteClientOverlay')?.addEventListener('click', e => {
-            if (e.target === e.currentTarget) closeInviteModal();
-        });
+        document.getElementById('openClientModalBtn')?.addEventListener('click', openInviteModal);
     }
 
     return { init, openInviteModal };
